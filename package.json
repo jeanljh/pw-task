@@ -10,7 +10,7 @@
     "playwright"
   ],
   "repository": {
-    "url": "",
+    "url": "https://github.com/jeanljh/pw-task.git",
     "type": "git"
   },
   "author": "jean",

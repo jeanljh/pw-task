@@ -34,7 +34,7 @@ const config: PlaywrightTestConfig = {
     /* Takes screenshot on failure */
     screenshot: 'only-on-failure',
     /* Run test in headless */
-    headless: false,
+    headless: true,
     /* Set page width and height */
     viewport: {
       width: 1280,

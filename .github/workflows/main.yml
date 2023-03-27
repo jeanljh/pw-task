@@ -26,7 +26,7 @@ jobs:
       run: npx playwright install-deps
     - name: running npx playwright test
       run: xvfb-run --auto-servernum -- npm run test:stage
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       if: always()
       with:
         name: playwright-report
