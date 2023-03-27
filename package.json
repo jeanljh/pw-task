@@ -1,7 +1,7 @@
 {
   "name": "pw-task",
   "version": "1.0.0",
-  "description": "",
+  "description": "example of automation test framework design with playwright, typescript, fixtures, page object model & playwright reporter",
   "main": "index.js",
   "scripts": {
     "test": "npx playwright test"
