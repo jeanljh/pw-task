@@ -1,4 +1,4 @@
-import { test as base, Page } from "@playwright/test";
+import { test as base } from "@playwright/test";
 import Home from "../pages/home.page";
 import SearchBBC from "../pages/search-bbc.page";
 import LoginRegister from "../pages/login-register.page";

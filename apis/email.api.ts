@@ -7,12 +7,14 @@ export default class EmailApi {
     private login: string = ''
     private domain: string = ''
 
+    // create api context for https://www.1secmail.com/api/v1/
     async apiContext() {
         return await request.newContext({
             baseURL: urlEmailApi
         })
     }
 
+    // generate random email via endpoint
     async genRandomEmail() {
         const req = await this.apiContext()
         const res = await req.get('', {
@@ -28,6 +30,7 @@ export default class EmailApi {
         return email
     }
 
+    // check inbox for verify email link
     async getInboxWithRetry(maxRetries: number): Promise<any> {
         if (!maxRetries) return null
         const req = await this.apiContext()
@@ -47,6 +50,7 @@ export default class EmailApi {
         return inbox[0]['id']
     }
 
+    // get verify email link from email
     async getVerifyEmailLink() {
         const id = await this.getInboxWithRetry(5)
         expect(id).not.toBeNull()
