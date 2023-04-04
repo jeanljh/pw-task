@@ -91,7 +91,7 @@ test('Test - login with invalid email account', async ({home, loginRegister}) =>
     await loginRegister.inputEmail().fill(data.invalidEmail)
     await loginRegister.inputPassword().fill(data.password)
     await loginRegister.btnSubmit().click()
-    // ensure page show error message when attemp to login with invalid email
+    // ensure page shows error message when attempt to login with invalid email
     await expect(loginRegister.divErrorMsg()).toBeVisible()
 })
 
