@@ -10,5 +10,5 @@ export default class SearchBBC {
     inputSearch = () => this.page.locator('#search-input')
     btnSearch = () => this.page.getByTestId('test-search-submit')
     listNews = () => this.page.getByTestId('default-promo')
-    linkTitle = (text: string) => this.page.getByRole('link', { 'name': text })
+    linkTitle = (name: string) => this.page.getByRole('link', { name })
 }

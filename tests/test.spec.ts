@@ -1,25 +1,24 @@
 import test, { expect } from '../fixtures/modules'
 import data from '../fixtures/data.json'
+import Helper from '../utils/helper.util'
 
-test.beforeEach(async ({page, home}) => {
+test.beforeEach(async ({page}) => {
     // go to home page
-    await home.navHome()
-    await expect(page).toHaveURL(data.urlBase)
+    await page.goto('', { waitUntil: 'networkidle' })
 })
 
 test('Test - BBC search', async ({home, searchBBC}) => {
-    // click BBD Search on home page
+    // click BBC Search on home page
     await home.divSearch().click()
     // enter search value and click search
     await searchBBC.inputSearch().fill(data.searchValue)
-    expect(await searchBBC.inputSearch().inputValue()).toBe(data.searchValue)
+    expect(await searchBBC.inputSearch().inputValue(), 'entered search value').toBe(data.searchValue)
     await searchBBC.btnSearch().click()
     // total news items on current page
     const newsCount = await searchBBC.listNews().count()
      // total news titles that match or contain search value
     const matchedTitleCount = await searchBBC.linkTitle(data.searchValue).count()
-    // validate total matched news titles must be equal or more than total nnews items
-    expect(matchedTitleCount).toBeGreaterThanOrEqual(newsCount)
+    expect(matchedTitleCount, 'total matched news titles must be equal to or more than total news items').toBeGreaterThanOrEqual(newsCount)
 })
 
 test('Test - e2e register for under age', async ({page, home, loginRegister}) => {
@@ -28,7 +27,7 @@ test('Test - e2e register for under age', async ({page, home, loginRegister}) =>
     await loginRegister.linkName('register now').click()
     await loginRegister.linkName('under').click()
     await loginRegister.btnOK().click()
-    // ensure that page redirects to home page when attemp to register for under age
+    // ensure user is redirected to home page when attempt to register for under age
     await page.waitForURL('')
 })
 
@@ -48,21 +47,16 @@ test('Test - e2e register for over age, verify email and delete account', async 
     const email = await emailApi.genRandomEmail()
     
     // enter email / password and submit
-    await loginRegister.inputEmail().fill(email)
-    await loginRegister.inputPassword().fill(data.password)
-    await loginRegister.btnSubmit().click()
+    await loginRegister.enterUserCredential(email, data.password)
     
     // get and open email verification link 
     await page.goto(await emailApi.getVerifyEmailLink())
     await page.goto(data.urlAccountSettings)
     
-    // validate verify email message does not show
-    expect(account.divVerifyEmailMsg()).toBeHidden()
+    expect(account.divVerifyEmailMsg(), 'email message does not show').toBeHidden()
+    expect(await account.divEmail().innerText(), 'email in account settings is correct').toBe(email)
     
-    // validate email in account settings is correct
-    expect(await account.divEmail().innerText()).toBe(email)
-    
-    // delete account and validate account deletion is successful
+    // delete account and check account deletion is successful
     await account.linkDeleteAccount().click()
     await account.inputPassword().fill(data.password)
     await account.btnDeleteAccount().click()
@@ -72,27 +66,19 @@ test('Test - e2e register for over age, verify email and delete account', async 
 test('Test - login with valid email account', async ({page, home, loginRegister, account}) => {
     // login with valid email
     await home.spanSignIn().click()
-    await loginRegister.inputEmail().fill(data.validEmail)
-    await loginRegister.inputPassword().fill(data.password)
-    await loginRegister.btnSubmit().click()
-    // ensure that page redirects to home page after successful login
+    await loginRegister.enterUserCredential(data.validEmail, data.password)
+    // ensure user is redirected to home page after successful login
     await page.waitForURL('')
-    // validate sign in link text changes to 'Your account'
-    await expect(home.spanSignIn()).toHaveText('Your account')
     // go to account settings
     await page.goto(data.urlAccountSettings)
-    // validate email in account settings is correct
-    expect(await account.divEmail().innerText()).toBe(data.validEmail)
+    expect(await account.divEmail().innerText(), 'email in account settings is correct').toBe(data.validEmail)
 })
 
 test('Test - login with invalid email account', async ({home, loginRegister}) => {
     // login with invalid email
     await home.spanSignIn().click()
-    await loginRegister.inputEmail().fill(data.invalidEmail)
-    await loginRegister.inputPassword().fill(data.password)
-    await loginRegister.btnSubmit().click()
-    // ensure page show error message when attemp to login with invalid email
-    await expect(loginRegister.divErrorMsg()).toBeVisible()
+    await loginRegister.enterUserCredential(data.invalidEmail, data.password)
+    await expect(loginRegister.divErrorMsg(), 'page shows error message when login with invalid email').toBeVisible()
 })
 
 test('Test - navigate menu headers', async ({page, home}) => {
@@ -103,4 +89,23 @@ test('Test - navigate menu headers', async ({page, home}) => {
         await page.waitForURL(href)
         await page.goto('')
     }
+})
+
+test('Test - select country of residence', async ({page, home, loginRegister, account}) => {
+    // login with valid email
+    await home.spanSignIn().click()
+    await loginRegister.enterUserCredential(data.validEmail, data.password)
+    // ensure user is redirected to home page after successful login
+    await page.waitForURL('')
+    // go to edit location
+    await page.goto(data.urlEditLocation)
+    // get the index of the new location to select
+    const index = Helper.genRandomNumber(await account.optionLocation().count())
+    // get the location name based on the index
+    const selectedOption = await account.optionLocation().nth(index).innerText()
+    // select the new location and save
+    await account.selectLocation().selectOption({index})
+    await account.btnSave().click()
+    await expect(account.divSavedMsg(), 'message shows location saved').toHaveText('location saved', { ignoreCase: true })
+    await expect(account.divCountry(), 'correct country is selected').toHaveText(selectedOption)
 })

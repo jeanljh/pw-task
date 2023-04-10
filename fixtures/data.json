@@ -2,6 +2,7 @@
     "urlBase": "https://www.bbc.com",
     "urlAccountSettings": "https://account.bbc.com/account/settings",
     "urlAccountDeleted": "https://account.bbc.com/account/deleted",
+    "urlEditLocation": "https://account.bbc.com/account/settings/edit/location",
     "urlEmailApi": "https://www.1secmail.com/api/v1/",
     "searchValue": "world cup",
     "day": "01",

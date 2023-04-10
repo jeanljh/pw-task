@@ -10,9 +10,4 @@ export default class Home {
     spanSignIn = () => this.page.locator('#idcta-username')
     divSearch = () => this.page.locator('div[role="search"]')
     linkHeader = () => this.page.locator('nav.international').getByRole('link')
-
-    async navHome () {
-        await this.page.goto('')
-        await this.page.waitForLoadState()
-    }
 }
