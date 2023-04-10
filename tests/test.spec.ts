@@ -4,7 +4,7 @@ import Helper from '../utils/helper.util'
 
 test.beforeEach(async ({page}) => {
     // go to home page
-    await page.goto('', { waitUntil: 'networkidle' })
+    await page.goto('')
 })
 
 test('Test - BBC search', async ({home, searchBBC}) => {
@@ -91,7 +91,7 @@ test('Test - navigate menu headers', async ({page, home}) => {
     }
 })
 
-test.skip('Test - select country of residence', async ({page, home, loginRegister, account}) => {
+test('Test - select country of residence', async ({page, home, loginRegister, account}) => {
     // login with valid email
     await home.spanSignIn().click()
     await loginRegister.enterUserCredential(data.validEmail, data.password)
