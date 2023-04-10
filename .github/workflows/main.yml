@@ -17,15 +17,22 @@ jobs:
     - name: setup node
       uses: actions/setup-node@v3 
     - name: run npm ci
+    - name: checkout
+      uses: actions/checkout@v3
+    - name: setup node
+      uses: actions/setup-node@v3 
+    - name: run npm ci
       run: npm ci
     - name: install playwright dependencies
       run: npx playwright install-deps
     - name: run playwright test
       run: xvfb-run --auto-servernum -- npm run test
-    - uses: actions/upload-artifact@v3
+    - name: upload playwright test report
+      uses: actions/upload-artifact@v3
       if: always()
       with:
         name: playwright-report
+        path: playwright-report
         path: playwright-report
         retention-days: 30
     - name: deploy to github pages
