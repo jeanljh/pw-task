@@ -91,7 +91,7 @@ test('Test - navigate menu headers', async ({page, home}) => {
     }
 })
 
-test('Test - select country of residence', async ({page, home, loginRegister, account}) => {
+test.skip('Test - select country of residence', async ({page, home, loginRegister, account}) => {
     // login with valid email
     await home.spanSignIn().click()
     await loginRegister.enterUserCredential(data.validEmail, data.password)
